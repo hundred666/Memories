@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="小宁&me">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="Bookmark" href="/favicon.ico">
+    <title>管理后台</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.form.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="bootstrap/js/html5shiv.js"></script>
+    <script src="bootstrap/js/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+{{$login := .Login }}
+{{if eq $login 1}}
+<!-- 模态框（Modal） -->
+<div class="modal" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    登录
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="username"
+                               class="col-sm-2 control-label">名字</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username"
+                                   name="name"
+                                   placeholder="请输入名字">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"
+                               class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password"
+                                   name="password"
+                                   placeholder="请输入密码">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default"
+                                    id="user-login">登录
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script>
+    $("#myModal").modal("show");
+</script>
+{{else}}
+<header>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-target="#example-navbar-collapse">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">管理后台</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-right" id="example-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">{{.UserName}}</a></li>
+                    <li><a href="/user/logout">退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container">
+
+    <div class="row" id="overview">
+        目前已经有了{{.Moves}}个记忆瞬间，{{.Comments}}个评论内容,{{.Portraits}}个图片。<br>
+        已经共有{{.Users}}个用户
+    </div>
+
+    <div class="row" id="contents">
+        <div class="col-md-4 col-sm-6 col-xs-12 comments-ul">
+            <h3>最近的评论</h3>
+            <ul id="comments">
+
+            </ul>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12 moves-ul">
+            <h3>最近的记忆</h3>
+            <ul id="moves"></ul>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12 users-ul">
+            <h3>所有的用户</h3>
+            <ul id="users">
+
+            </ul>
+        </div>
+    </div>
+</div>
+{{end}}
+
+<div id="modals">
+    <div class="modal fade" id="CommentModal" tabindex="-1" role="dialog"
+         aria-labelledby="CommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="CommentModalLabel">
+                        修改评论内容
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <input type="hidden" name="commentId" id="commentId">
+                        <div class="form-group">
+                            <label for="commentUser"
+                                   class="col-sm-2 control-label">评论者</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="commentUser"
+                                       name="commentUser"
+                                       placeholder="请输入名字">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commentContent"
+                                   class="col-sm-2 control-label">评论内容</label>
+                            <div class="col-sm-10">
+                                <textarea id="commentContent" class="form-control"
+                                          rows="3" name="commentContent"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"
+                                        id="comment-submit">修改
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="MoveModal" tabindex="-1" role="dialog"
+         aria-labelledby="MoveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="MoveModalLabel">
+                        修改记忆内容
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <input type="hidden" name="moveId" id="moveId">
+                        <div class="form-group">
+                            <label for="moveUser"
+                                   class="col-sm-2 control-label">提交者</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="moveUser"
+                                       name="moveUser"
+                                       placeholder="请输入名称">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="moveContent"
+                                   class="col-sm-2 control-label">记忆内容</label>
+                            <div class="col-sm-10">
+                                <textarea id="moveContent" class="form-control"
+                                          rows="3" name="moveContent"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"
+                                        id="move-submit">修改
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="UserModal" tabindex="-1" role="dialog"
+         aria-labelledby="UserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="UserModalLabel">
+                        修改用户信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <input type="hidden" name="userId" id="userId">
+                        <div class="form-group">
+                            <label for="username"
+                                   class="col-sm-2 control-label">名字</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="username"
+                                       name="username"
+                                       placeholder="请输入名字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"
+                                   class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="password"
+                                       name="password"
+                                       placeholder="请输入密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="permission"
+                                   class="col-sm-2 control-label">权限</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="permission" name="permission">
+                                    <option value="0">仅可评论</option>
+                                    <option value="1">可以上传文件</option>
+                                    <option value="5">管理员</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"
+                                        id="user-submit">修改
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+
+<script src="/static/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+body {
+    font-family: "微软雅黑", 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 25px;
+}
+
+* {
+    list-style: none;
+    text-decoration: none;
+}
+
+.comments-ul {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.comments-ul::-webkit-scrollbar {
+    display: none;
+}
+
+.comments-ul ul {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.comments-ul ul li {
+    border-bottom: 1px solid #ddd;
+    margin-left: -40px;
+    margin-bottom: 15px;
+}
+
+.comments-ul ul li i {
+    color: #ff4343;
+    font-weight: normal;
+
+}
+
+.comments-ul ul li span {
+    float: left;
+    width: 50px;
+    font-weight: normal;
+}
+
+.comments-ul ul li label {
+    width: 60px;
+    height: 100%;
+}
+
+.comments-ul ul li label {
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.comments-ul ul li em {
+    float: right;
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.moves-ul {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.moves-ul::-webkit-scrollbar {
+    display: none;
+}
+
+.moves-ul ul {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.moves-ul ul li {
+    border-bottom: 1px solid #ddd;
+    margin-left: -40px;
+    margin-bottom: 15px;
+}
+
+.moves-ul ul li i {
+    color: #ff4343;
+    font-weight: normal;
+
+}
+
+.moves-ul ul li span {
+    float: left;
+    width: 50px;
+    font-weight: normal;
+}
+
+.moves-ul ul li label {
+    width: 60px;
+    height: 100%;
+}
+
+.moves-ul ul li label {
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.moves-ul ul li em {
+    float: right;
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.users-ul {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.users-ul::-webkit-scrollbar {
+    display: none;
+}
+
+.users-ul ul {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.users-ul ul li {
+    border-bottom: 1px solid #ddd;
+    margin-left: -40px;
+    margin-bottom: 15px;
+}
+
+.users-ul ul li i {
+    color: #ff4343;
+    font-weight: normal;
+
+}
+
+.users-ul ul li span {
+    float: left;
+    width: 50px;
+    font-weight: normal;
+}
+
+.users-ul ul li label {
+    width: 60px;
+    height: 100%;
+}
+
+.users-ul ul li label {
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.users-ul ul li em {
+    float: right;
+    color: #ff4343;
+    font-weight: normal;
+}

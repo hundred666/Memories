@@ -1,0 +1,107 @@
+* {
+    list-style: none;
+    text-decoration: none;
+}
+
+.bgcolor {
+    background: #ee9ca7;
+    background: -webkit-linear-gradient(top left, #ee9ca7 0%, #ee9ca7 100%);
+    background: linear-gradient(to bottom right, #ee9ca7 0%, #ee9ca7 100%);
+    opacity: 0.9;
+}
+
+pre {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    *white-space: normal !important;
+    background: #ee9ca8;
+    background: -webkit-linear-gradient(top left, #ee9ca8 0%, #ee9ca8 100%);
+    background: linear-gradient(to bottom right, #ee9ca8 0%, #ee9ca8 100%);
+    opacity: 0.9;
+
+}
+
+.create {
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    z-index: 100;
+}
+
+.intro {
+    position: fixed;
+    left: 20px;
+    bottom: 30px;
+    z-index: 100;
+}
+
+.move {
+    margin: 20px;
+    overflow: hidden;
+    border: 1px solid cornflowerblue;
+}
+
+.move img {
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+}
+
+.move .content {
+    font-size: larger;
+    color: white;
+    padding-left: 10px;
+}
+
+.move .more {
+    text-align: center;
+}
+
+#move-comment {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#move-comment::-webkit-scrollbar {
+    display: none;
+}
+
+#comment-title {
+    margin-top: 10px;
+}
+
+#portrait .item img {
+    display: block;
+    margin: 9px auto;
+    width: 280px;
+    height: 450px;
+}
+
+#move-comment ul {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+#move-comment ul li {
+    border: 1px solid #ddd;
+    margin-left: -40px;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+
+#move-comment ul li i {
+    color: #ff4343;
+    font-weight: normal;
+
+}
+
+#move-comment ul li label {
+    width: 100px;
+    height: 100%;
+    padding: 3px;
+}
+
+#move-comment ul li label {
+    color: #ff4343;
+    font-weight: normal;
+}

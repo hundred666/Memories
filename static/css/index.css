@@ -1,0 +1,107 @@
+
+body {
+    font-family: "微软雅黑", 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 25px;
+}
+
+* {
+    list-style: none;
+    text-decoration: none;
+}
+
+/*主题内容*/
+
+.left-bg {
+    background: #ff4343;
+    min-height: 500px;
+}
+
+#profile-img {
+    width: 170px;
+    height: 170px;
+    border: 1px solid transparent;
+    border-radius: 85px;
+    background: #ff6f69;
+    margin: 30px auto 0;
+}
+
+#profile-img img {
+    display: block;
+    border-radius: 75px;
+    margin: 9px auto;
+    width: 150px;
+    height: 150px;
+}
+
+#profile-top {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+}
+
+#profile-mid {
+    padding-top: 15px;
+}
+
+#profile-mid p {
+    word-wrap: break-word;
+}
+
+#profile-top, #profile-mid, #profile-bot {
+    color: #ddd;
+}
+
+#resume-comment {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#resume-comment::-webkit-scrollbar {
+    display: none;
+}
+
+#comment-title {
+    margin-top: 10px;
+}
+
+#portrait .item img {
+    display: block;
+    margin: 9px auto;
+    width: 280px;
+    height: 450px;
+}
+
+#resume-comment ul {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+#resume-comment ul li {
+    border-bottom: 1px solid #ddd;
+    margin-left: -40px;
+    margin-bottom: 15px;
+}
+
+#resume-comment ul li i {
+    color: #ff4343;
+    font-weight: normal;
+
+}
+
+#resume-comment ul li label {
+    width: 100px;
+    height: 100%;
+}
+
+#resume-comment ul li label {
+    color: #ff4343;
+    font-weight: normal;
+}
+
+.portrait-img {
+    max-width: 100%;
+    max-height: 100%;
+}
