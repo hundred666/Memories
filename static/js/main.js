@@ -1,5 +1,26 @@
 $(function () {
 
+    $('#upComment').on('shown.bs.modal', function () {
+        $(this).draggable({
+            handle: ".modal-header"   // 只能点击头部拖动
+        });
+        $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
+    });
+
+    $('#upPortrait').on('shown.bs.modal', function () {
+        $(this).draggable({
+            handle: ".modal-header"   // 只能点击头部拖动
+        });
+        $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
+    });
+
+    $('#upMove').on('shown.bs.modal', function () {
+        $(this).draggable({
+            handle: ".modal-header"   // 只能点击头部拖动
+        });
+        $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
+    });
+
     $('#comment-submit').on('click', function () {
 
         $('form').on('submit', function () {
@@ -20,7 +41,7 @@ $(function () {
                     alert('提交成功！');
                 }
             });
-            $("#myModal").model("hide");
+            $("#upComment").model("hide");
             return false; // 阻止表单自动提交事件
         });
     });
@@ -47,7 +68,7 @@ $(function () {
                     alert('提交成功！');
                 }
             });
-            $("#myModal").model("hide");
+            $("#upComment").model("hide");
             return false; // 阻止表单自动提交事件
         });
     });
@@ -118,7 +139,7 @@ function updateComment() {
 function updateMoveComment(mid) {
     $.ajax({
         type: "get",
-        url: "/move/getMoveComments?mid="+mid,
+        url: "/move/getMoveComments?mid=" + mid,
         success: function (rr) {
             result = $.parseJSON(rr);
             if (result.status === 1) {
