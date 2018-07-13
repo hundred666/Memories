@@ -6,7 +6,7 @@ import (
 	"time"
 	"dao"
 	"strconv"
-	"controller"
+	"handler"
 )
 
 type CommentHandler struct {

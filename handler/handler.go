@@ -14,7 +14,11 @@ var MovePath string
 const DEFAULT_START = 0
 const DEFAULT_END = -1
 
-func init() {
+
+
+func InitHD() {
+	log.Println("init path")
+
 	viewPath, err := util.GetViewPath()
 	if err != nil {
 		log.Fatal(err)

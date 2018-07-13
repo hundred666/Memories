@@ -2,7 +2,7 @@ package admin
 
 import (
 	"net/http"
-	"controller"
+	"handler"
 	"log"
 	"html/template"
 	"dao"

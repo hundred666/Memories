@@ -2,7 +2,6 @@ package dao
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"reflect"
 )
 
@@ -24,7 +23,7 @@ func getRows(rows *sql.Rows, varType interface{}) []interface{} {
 
 func Get(query string, varType interface{}, cond ...interface{}) []interface{} {
 
-	db, err := sql.Open("mysql", "root:PASSWORD@/DATABASE?charset=utf8&loc=Asia%2FShanghai&parseTime=true")
+	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		return nil
 	}
@@ -44,7 +43,7 @@ func Get(query string, varType interface{}, cond ...interface{}) []interface{} {
 }
 
 func Modify(modify string, cond ...interface{}) (int, error) {
-	db, err := sql.Open("mysql", "root:PASSWORD@/DATABASE?charset=utf8&loc=Asia%2FShanghai&parseTime=true")
+	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		return 0, err
 	}
@@ -66,10 +65,4 @@ func Modify(modify string, cond ...interface{}) (int, error) {
 	}
 	return int(id), nil
 
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

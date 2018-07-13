@@ -3,7 +3,7 @@ package index
 import (
 	"net/http"
 	"text/template"
-	"controller"
+	"handler"
 	"log"
 )
 

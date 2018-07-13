@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func getWebPath() (string, error) {
+func GetWebPath() (string) {
 	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
@@ -13,7 +13,7 @@ func getWebPath() (string, error) {
 	webPath := filepath.Join(dir, "src")
 	_, err = os.Stat(webPath)
 	if err == nil {
-		return webPath, nil
+		return webPath
 	}
 	dir, err = filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
@@ -22,36 +22,28 @@ func getWebPath() (string, error) {
 	webPath = filepath.Join(dir, "src")
 	_, err = os.Stat(webPath)
 	if err == nil {
-		return webPath, nil
+		return webPath
 	}
-	return "", err
+	return ""
 }
 
 func GetConfPath() (string, error) {
 
-	webPath, err := getWebPath()
-	if err != nil {
-		return "", err
-	}
+	webPath := GetWebPath()
 	confPath := filepath.Join(webPath, "conf", "web.conf")
 	return confPath, nil
 }
 
 func GetStaticPath() (string, error) {
 
-	webPath, err := getWebPath()
-	if err != nil {
-		return "", err
-	}
+	webPath := GetWebPath()
+
 	staticPath := filepath.Join(webPath, "static")
 	return staticPath, nil
 }
 
 func GetViewPath() (string, error) {
-	webPath, err := getWebPath()
-	if err != nil {
-		return "", err
-	}
+	webPath := GetWebPath()
 	viewPath := filepath.Join(webPath, "view")
 	return viewPath, nil
 }
