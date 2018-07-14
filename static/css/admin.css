@@ -10,19 +10,16 @@ body {
     text-decoration: none;
 }
 
-.comments-ul {
-    max-height: 500px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.comments-ul::-webkit-scrollbar {
+.comments-ul ul::-webkit-scrollbar {
     display: none;
 }
 
 .comments-ul ul {
     margin-top: 20px;
     font-size: 16px;
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .comments-ul ul li {
@@ -59,19 +56,17 @@ body {
     font-weight: normal;
 }
 
-.moves-ul {
-    max-height: 500px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
 
-.moves-ul::-webkit-scrollbar {
+.moves-ul ul::-webkit-scrollbar {
     display: none;
 }
 
 .moves-ul ul {
     margin-top: 20px;
     font-size: 16px;
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .moves-ul ul li {
@@ -108,19 +103,16 @@ body {
     font-weight: normal;
 }
 
-.users-ul {
-    max-height: 500px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.users-ul::-webkit-scrollbar {
+.users-ul ul::-webkit-scrollbar {
     display: none;
 }
 
 .users-ul ul {
     margin-top: 20px;
     font-size: 16px;
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .users-ul ul li {
