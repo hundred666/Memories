@@ -15,7 +15,7 @@ type UserHandler struct {
 const USER = "USER"
 
 func (u *UserHandler) LoginCheck(req *http.Request) bool {
-	if _, err := req.Cookie("uname"); err == nil {
+	if _, err := req.Cookie("userId"); err == nil {
 		return true
 	}
 	return false
@@ -32,7 +32,8 @@ func (u *UserHandler) Login(w http.ResponseWriter, req *http.Request) {
 		user.Password = password
 		if dao.UserExist(userName) {
 			if dao.AdminPermission(user) {
-				cookie = http.Cookie{Name: "uname", Value: user.Name, Path: "/", MaxAge: 86400}
+				user = dao.GetUserByName(user.Name)
+				cookie = http.Cookie{Name: "userId", Value: strconv.Itoa(user.Id), Path: "/", MaxAge: 86400}
 				http.SetCookie(w, &cookie)
 				w.Write(model.MarshalResponse(0, "login succeed"))
 				return
@@ -51,7 +52,7 @@ func (u *UserHandler) Login(w http.ResponseWriter, req *http.Request) {
 
 func (u *UserHandler) Logout(w http.ResponseWriter, req *http.Request) {
 	if u.LoginCheck(req) {
-		cookie := http.Cookie{Name: "uname", Path: "/", MaxAge: -1}
+		cookie := http.Cookie{Name: "userId", Path: "/", MaxAge: -1}
 		http.SetCookie(w, &cookie)
 	}
 	http.Redirect(w, req, "/", http.StatusFound)

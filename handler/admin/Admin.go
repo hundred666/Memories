@@ -16,7 +16,7 @@ type AdminHandler struct {
 const ADMIN = "ADMIN"
 
 func (a *AdminHandler) LoginCheck(req *http.Request) bool {
-	if _, err := req.Cookie("uname"); err == nil {
+	if _, err := req.Cookie("userId"); err == nil {
 		return true
 	}
 	return false
@@ -28,9 +28,10 @@ func (a *AdminHandler) Index(w http.ResponseWriter, req *http.Request) {
 		data["Login"] = 1
 	} else {
 		data["Login"] = 0
-		userCookie, _ := req.Cookie("uname")
-		userName := userCookie.Value
-		data["UserName"] = userName
+		userCookie, _ := req.Cookie("userId")
+		userId, _ := strconv.Atoi(userCookie.Value)
+		user := dao.GetUserById(userId)
+		data["UserName"] = user.Name
 		userCount := dao.GetUserCount()
 		moveCount := dao.GetMoveCount()
 		commentCount := dao.GetCommentCount()
@@ -102,9 +103,9 @@ func (a *AdminHandler) UpdateMove(w http.ResponseWriter, req *http.Request) {
 		w.Write(model.MarshalResponse(1, "moveId error"))
 		return
 	}
-	user:=req.Form.Get("moveUser")
+	user := req.Form.Get("moveUser")
 	content := req.Form.Get("content")
-	move := model.Move{Id: moveId, Content: content,User:user}
+	move := model.Move{Id: moveId, Content: content, User: user}
 	_, err = dao.UpdateMove(move)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "move update failed"))
