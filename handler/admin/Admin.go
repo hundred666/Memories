@@ -8,6 +8,7 @@ import (
 	"dao"
 	"model"
 	"strconv"
+	"time"
 )
 
 type AdminHandler struct {
@@ -58,10 +59,10 @@ func (a *AdminHandler) UpdateComment(w http.ResponseWriter, req *http.Request) {
 	}
 	commentId, err := strconv.Atoi(req.Form.Get("commentId"))
 	commentUser := req.Form.Get("commentUser")
-	content := req.Form.Get("content")
+	content := req.Form.Get("commentContent")
 	comment := model.Comment{
 		Id:      commentId,
-		UName:   commentUser,
+		User:    commentUser,
 		Content: content}
 	_, err = dao.UpdateComment(comment)
 	if err != nil {
@@ -104,7 +105,7 @@ func (a *AdminHandler) UpdateMove(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	user := req.Form.Get("moveUser")
-	content := req.Form.Get("content")
+	content := req.Form.Get("moveContent")
 	move := model.Move{Id: moveId, Content: content, User: user}
 	_, err = dao.UpdateMove(move)
 	if err != nil {
@@ -155,8 +156,10 @@ func (a *AdminHandler) UpdateMoveComment(w http.ResponseWriter, req *http.Reques
 	content := req.Form.Get("content")
 	comment := model.Comment{
 		Id:      commentId,
-		UName:   commentUser,
+		User:    commentUser,
 		Content: content}
+
+
 	_, err = dao.UpdateMoveComment(move, comment)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "comment update failed"))
@@ -205,7 +208,7 @@ func (a *AdminHandler) UpdateUser(w http.ResponseWriter, req *http.Request) {
 	}
 	userName := req.Form.Get("username")
 	password := req.Form.Get("password")
-	permission, err := strconv.Atoi(req.Form.Get("permission"))
+	permission, err := strconv.Atoi(req.Form.Get("userPermission"))
 	if err != nil {
 		permission = 0
 	}
@@ -238,4 +241,82 @@ func (a *AdminHandler) DelUser(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	w.Write(model.MarshalResponse(0, "user delete success"))
+}
+
+func (a *AdminHandler) UpdateAnnounce(w http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	if !a.LoginCheck(req) {
+		w.Write(model.MarshalResponse(1, "not login"))
+		return
+	}
+	announceId, err := strconv.Atoi(req.Form.Get("announceId"))
+	announceUser := req.Form.Get("announceUser")
+	content := req.Form.Get("announceContent")
+	display := false
+	d := req.Form.Get("announceDisplay")
+	if d == "on" {
+		display = true
+	}
+
+	announce := model.Announce{
+		Id:      announceId,
+		User:    announceUser,
+		Display: display,
+		Content: content}
+
+	_, err = dao.UpdateAnnounce(announce)
+	if err != nil {
+		w.Write(model.MarshalResponse(1, "announce update failed"))
+		return
+	}
+	w.Write(model.MarshalResponse(0, "announce update success"))
+}
+
+func (a *AdminHandler) DelAnnounce(w http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	if !a.LoginCheck(req) {
+		w.Write(model.MarshalResponse(1, "not login"))
+		return
+	}
+	announceId, err := strconv.Atoi(req.Form.Get("announceId"))
+	if err != nil {
+		w.Write(model.MarshalResponse(1, "announce type error"))
+		return
+	}
+	announce := model.Announce{
+		Id: announceId}
+	_, err = dao.DelAnnounce(announce)
+	if err != nil {
+		w.Write(model.MarshalResponse(1, "announce del failed"))
+		return
+	}
+	w.Write(model.MarshalResponse(0, "announce del success"))
+}
+
+func (a *AdminHandler) AddAnnounce(w http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	if !a.LoginCheck(req) {
+		w.Write(model.MarshalResponse(1, "not login"))
+		return
+	}
+	userCookie, _ := req.Cookie("userId")
+	userId, _ := strconv.Atoi(userCookie.Value)
+	user := dao.GetUserById(userId)
+
+	content := req.Form.Get("newAnnounceContent")
+	announceTime := time.Now()
+
+	announce := model.Announce{
+		Content: content,
+		Display: true,
+		Prior:   0,
+		User:    user.Name,
+		Time:    announceTime,
+	}
+	err := dao.AddAnnounce(announce)
+	if err != nil {
+		w.Write(model.MarshalResponse(1, err.Error()))
+		return
+	}
+	w.Write(model.MarshalResponse(0, "success"))
 }

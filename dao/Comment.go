@@ -5,8 +5,8 @@ import (
 )
 
 func AddComment(c model.Comment) (int, error) {
-	insert := "INSERT INTO Comment(UName,Content,CommentTime,CommentType,IP,UA) VALUES(?,?,?,?,?,?)"
-	return Modify(insert, c.UName, c.Content, c.CommentTime, c.CommentType, c.IP, c.UA)
+	insert := "INSERT INTO Comment(Content,CommentTime,CommentType,User,IP,UA) VALUES(?,?,?,?,?,?)"
+	return Modify(insert, c.Content, c.CommentTime, c.CommentType, c.User, c.IP, c.UA)
 }
 
 func GetComments(start int, end int, args ...string) ([]model.Comment) {
@@ -47,8 +47,8 @@ func GetComment(id int, args ...string) (model.Comment) {
 }
 
 func UpdateComment(c model.Comment) (int, error) {
-	update := "UPDATE Comment SET UName=?,Content=? WHERE Id=?"
-	return Modify(update, c.UName, c.Content, c.Id)
+	update := "UPDATE Comment SET Content=? ,User=? WHERE Id=?"
+	return Modify(update, c.Content, c.User, c.Id)
 }
 
 func DelComment(c model.Comment) (int, error) {

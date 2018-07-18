@@ -4,17 +4,17 @@ import (
 	"util"
 	"log"
 	"path/filepath"
+	"time"
 )
 
 var ViewPath string
 var AdminPath string
 var PortraitPath string
 var MovePath string
+var ExpireTime time.Duration
 
 const DEFAULT_START = 0
 const DEFAULT_END = -1
-
-
 
 func InitHD() {
 	log.Println("init path")
@@ -31,6 +31,7 @@ func InitHD() {
 	}
 	PortraitPath = filepath.Join(staticPath, "portraits")
 	MovePath = filepath.Join(staticPath, "moves")
+	ExpireTime = util.ExpireTime()
 
 }
 

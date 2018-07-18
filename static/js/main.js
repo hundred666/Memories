@@ -7,12 +7,6 @@ $(function () {
         $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
     });
 
-    $('#upPortrait').on('shown.bs.modal', function () {
-        $(this).draggable({
-            handle: ".modal-header"   // 只能点击头部拖动
-        });
-        $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
-    });
 
     $('#upMove').on('shown.bs.modal', function () {
         $(this).draggable({
@@ -21,94 +15,42 @@ $(function () {
         $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
     });
 
-    $('#comment-submit').on('click', function () {
+    $('#commentForm').on('submit', function () {
 
-        $('form').on('submit', function () {
-            var username = $('input[name=name]').val(),
-                password = $('input[name=password]').val(),
-                content = $('textarea').val();
-
-            $(this).ajaxSubmit({
-                type: 'post', // 提交方式 get/post
-                url: '/comment/addComment', // 需要提交的 url
-                data: {
-                    'name': username,
-                    'password': password,
-                    'content': content
-                },
-                success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
-                    // 此处可对 data 作相关处理
-                    alert('提交成功！');
+        $(this).ajaxSubmit({
+            type: 'post', // 提交方式 get/post
+            url: '/comment/addComment', // 需要提交的 url
+            success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
+                // 此处可对 data 作相关处理
+                result = $.parseJSON(data);
+                if (result.status === 1) {
+                    alert(result.payload)
+                } else if (result.status === 0) {
+                    getComments();
+                } else {
+                    alert("系统内部错误");
                 }
-            });
-            $("#upComment").model("hide");
-            return false; // 阻止表单自动提交事件
+            }
         });
-    });
-
-    $('#move-comment-submit').on('click', function () {
-
-        $('form').on('submit', function () {
-            var username = $('input[name=username]').val(),
-                password = $('input[name=password]').val(),
-                content = $('textarea').val(),
-                mid = $('input[name=mid]').val();
-
-            $(this).ajaxSubmit({
-                type: 'post', // 提交方式 get/post
-                url: '/move/addMoveComment', // 需要提交的 url
-                data: {
-                    'username': username,
-                    'password': password,
-                    'content': content,
-                    'mid': mid
-                },
-                success: function (data) { // data 保存提交后返回的数据，一般为 json 数据
-                    // 此处可对 data 作相关处理
-                    alert('提交成功！');
-                }
-            });
-            $("#upComment").model("hide");
-            return false; // 阻止表单自动提交事件
-        });
+        $("#upComment").modal("hide");
+        return false; // 阻止表单自动提交事件
     });
 
 
-    var portraitOptions = {
-        success: showResponse,
-        url: "/portrait/addPortrait",
-        type: "post",
-        clearForm: true,
-        resetForm: true,
-        timeout: 3000
-    };
-    $('#portrait-form').ajaxForm(portraitOptions);
 
 
-    var moveOptions = {
-        success: showResponse,
-        url: "/move/addMove",
-        type: "post",
-        clearForm: true,
-        resetForm: true,
-        timeout: 3000
-    };
-    $('#move-form').ajaxForm(moveOptions);
+
 
 
 });
 
-//  提交后
-function showResponse(responseText, statusText) {
-    result = $.parseJSON(responseText);
-    if (result.status === 0) {
-        alert("已提交")
-    }
-    location.reload();
-
+function index() {
+    getAnnounce();
+    getComments();
 }
 
-function updateComment() {
+
+function getComments() {
     $.ajax({
         type: "get",
         url: "/comment/getComments",
@@ -122,7 +64,7 @@ function updateComment() {
                 for (i = payload.length - 1, end = 0; i >= end; i--) {
                     msg = msg + "<li>";
                     msg = msg + "<i class=\"glyphicon glyphicon-flag\"></i>";
-                    msg = msg + "<label>" + payload[i].u_name + "</label>";
+                    msg = msg + "<label>" + payload[i].user + "</label>";
                     msg = msg + "<s>" + payload[i].content + "</s>";
                     msg = msg + "</li>";
                 }
@@ -136,30 +78,20 @@ function updateComment() {
 
 }
 
-function updateMoveComment(mid) {
+function getAnnounce() {
     $.ajax({
         type: "get",
-        url: "/move/getMoveComments?mid=" + mid,
+        url: "/announce/getLatestAnnounce",
         success: function (rr) {
             result = $.parseJSON(rr);
-            if (result.status === 1) {
-                alert("failed")
-            } else if (result.status === 0) {
+            if (result.status === 0) {
                 payload = result.payload;
-                msg = "";
-                for (i = payload.length - 1, end = 0; i >= end; i--) {
-                    msg = msg + "<li>";
-                    msg = msg + "<label>" + payload[i].u_name + "</label>";
-                    msg = msg + "<pre>" + payload[i].content + "</pre>";
-                    msg = msg + "</li>";
-                }
-                $("#comments").empty();
-                $("#comments").append(msg);
+                $("#announceText").empty();
+                $("#announceText").append(payload.content);
+                $("#announce").show();
             } else {
-                alert("系统内部错误");
+                $("#announce").hide();
             }
         }
     });
-
-
 }

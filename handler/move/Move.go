@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"html/template"
-	"log"
 )
 
 type MoveHandler struct {
@@ -21,14 +20,14 @@ const MOVE = "MOVE"
 
 func (m *MoveHandler) ViewMoves(w http.ResponseWriter, req *http.Request) {
 	t, _ := template.ParseFiles(handler.GetView("moves.html"))
-	moves := dao.GetMoves(handler.DEFAULT_START, handler.DEFAULT_END,"ORDER BY Id DESC")
+	moves := dao.GetMoves(handler.DEFAULT_START, handler.DEFAULT_END, "ORDER BY Id DESC")
 	t.Execute(w, moves)
 }
 
-func (m *MoveHandler)ViewMoveDetail(w http.ResponseWriter, req *http.Request){
+func (m *MoveHandler) ViewMoveDetail(w http.ResponseWriter, req *http.Request) {
 
 	vars := req.URL.Query()
-	mId:=vars.Get("mid")
+	mId := vars.Get("mid")
 	if mId == "" {
 		w.Write(model.MarshalResponse(1, "no resource"))
 		return
@@ -38,7 +37,6 @@ func (m *MoveHandler)ViewMoveDetail(w http.ResponseWriter, req *http.Request){
 	t, _ := template.ParseFiles(handler.GetView("moveDetail.html"))
 	t.Execute(w, move)
 }
-
 
 func (m *MoveHandler) AddMove(w http.ResponseWriter, req *http.Request) {
 	req.ParseMultipartForm(32 << 20)
@@ -112,9 +110,7 @@ func (m *MoveHandler) AddComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 
 	userName := req.Form.Get("username")
-	log.Println(userName)
 	password := req.Form.Get("password")
-	log.Println(password)
 	user := model.User{Name: userName, Password: password, LoginTime: time.Now()}
 
 	if !dao.UserLogin(user) {
@@ -123,16 +119,16 @@ func (m *MoveHandler) AddComment(w http.ResponseWriter, req *http.Request) {
 	}
 	dao.UpdateUserLogin(user)
 
-	mId := req.Form.Get("mid")
+	mId := req.Form.Get("moveId")
 
-	content := req.Form.Get("content")
+	content := req.Form.Get("commentContent")
 	commentTime := time.Now()
 	commentType := 1
 	ip := req.RemoteAddr
 	ua := req.UserAgent()
 
 	comment := model.Comment{
-		UName:       user.Name,
+		User:        user.Name,
 		Content:     content,
 		CommentTime: commentTime,
 		CommentType: commentType,
@@ -160,7 +156,7 @@ func (m *MoveHandler) AddComment(w http.ResponseWriter, req *http.Request) {
 
 func (m *MoveHandler) GetComments(w http.ResponseWriter, req *http.Request) {
 	vars := req.URL.Query()
-	mId:=vars.Get("mid")
+	mId := vars.Get("moveId")
 	if mId == "" {
 		w.Write(model.MarshalResponse(1, "no resource"))
 		return

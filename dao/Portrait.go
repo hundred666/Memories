@@ -10,8 +10,8 @@ import (
 )
 
 func AddPortrait(p model.Portrait) (error) {
-	insert := "INSERT INTO Portrait(Name,Path,UpTime,UpUser) VALUES(?,?,?,?)"
-	_, err := Modify(insert, p.Name, p.Path, p.UpTime, p.UpUser)
+	insert := "INSERT INTO Portrait(Name,Path,Time,User) VALUES(?,?,?,?)"
+	_, err := Modify(insert, p.Name, p.Path, p.Time, p.User)
 	return err
 }
 
@@ -35,8 +35,8 @@ func DelPortrait(p model.Portrait) (int, error) {
 }
 
 func UpdatePortrait(p model.Portrait) (int, error) {
-	update := "UPDATE Portrait SET Name=?,UpUser=? WHERE Id=?"
-	return Modify(update, p.Name, p.UpUser, p.Id)
+	update := "UPDATE Portrait SET Name=?,User=? WHERE Id=?"
+	return Modify(update, p.Name, p.User, p.Id)
 }
 
 func GetPortraits(start int, end int, args ...string) ([]model.Portrait) {

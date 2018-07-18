@@ -16,7 +16,7 @@
     <script src="bootstrap/js/respond.js"></script>
     <![endif]-->
 </head>
-<body class="bgcolor" onload="updateMoveComment({{.Id}})">
+<body class="bgcolor" onload="move({{.Id}})">
 
 <div class="container">
     <div class="create">
@@ -40,8 +40,8 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
-                        <input type="hidden" id="mid" name="mid" value="{{.Id}}">
+                    <form class="form-horizontal" role="form" id="commentForm">
+                        <input type="hidden" id="moveId" name="moveId" value="{{.Id}}">
                         <div class="form-group">
                             <label for="username"
                                    class="col-sm-2 control-label">名字</label>
@@ -61,11 +61,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="comment-content"
+                            <label for="commentContent"
                                    class="col-sm-2 control-label">评论内容</label>
                             <div class="col-sm-10">
-                                <textarea id="comment-content" class="form-control"
-                                                                          rows="3" name="content"></textarea>
+                                <textarea id="commentContent" class="form-control"
+                                          rows="3" name="commentContent"></textarea>
                             </div>
                         </div>
 
@@ -90,7 +90,7 @@
             </div>
             <div class="info">
                 <div class="col-md-4 col-xs-4 col-sm-4">{{.User}}</div>
-                <div class="col-md-8 col-xs-8 col-sm-8 pull-right">{{.Time}}</div>
+                <div class="pull-right">{{.Time}}</div>
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/jquery.form.min.js"></script>
 <script src="/static/js/jquery-ui.min.js"></script>
-<script src="/static/js/main.js"></script>
+<script src="/static/js/move.js"></script>
 
 
 </body>

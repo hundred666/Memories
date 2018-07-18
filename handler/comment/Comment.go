@@ -62,7 +62,7 @@ func (c *CommentHandler) GetAllComments(w http.ResponseWriter, req *http.Request
 func (c *CommentHandler) AddComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	var user model.User
-	userName := req.Form.Get("name")
+	userName := req.Form.Get("username")
 	password := req.Form.Get("password")
 	user.Name = userName
 	user.Password = password
@@ -72,14 +72,14 @@ func (c *CommentHandler) AddComment(w http.ResponseWriter, req *http.Request) {
 	}
 	dao.UpdateUserLogin(user)
 
-	content := req.Form.Get("content")
+	content := req.Form.Get("commentContent")
 	commentTime := time.Now()
 	commentType := 0
 	ip := req.RemoteAddr
 	ua := req.UserAgent()
 
 	comment := model.Comment{
-		UName:       user.Name,
+		User:       user.Name,
 		Content:     content,
 		CommentTime: commentTime,
 		CommentType: commentType,

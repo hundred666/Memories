@@ -17,17 +17,17 @@
     <![endif]-->
 </head>
 <body>
+<div id="portraitBlock">
+    <img id="bigPortrait" src="">
+</div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-4 col-xs-4 col-sm-4">
-            <button class="btn btn-primary btn-info" data-toggle="modal"
-                    data-target="#upPortrait">
-                上传图片
-            </button>
-        </div>
+    <div class="create">
+        <button class="btn" data-toggle="modal"
+                data-target="#upPortrait">
+            提交
+        </button>
     </div>
-
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="upPortrait" tabindex="-1" role="dialog"
          aria-labelledby="upPortraitLabel" aria-hidden="true">
@@ -49,7 +49,7 @@
                                    class="col-sm-2 control-label">名字</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="upusername"
-                                       name="name"
+                                       name="username"
                                        placeholder="请输入名字">
                             </div>
                         </div>
@@ -93,30 +93,11 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-
-</div>
-
-
-<div id="myCarousel" class="carousel slide">
-    <!-- 轮播（Carousel）项目 -->
-    <div class="carousel-inner">
-    {{range $i,$v:=.}}
-        <div class="item {{if not $i}}active{{end}}">
-            <div class="carousel-caption">{{$v.Name}}</div>
-            <img src="{{$v.Path}}" alt="{{$v.Name}}" class="portrait-img">
-        </div>
-    {{end}}
+    <div id="portraits">
 
     </div>
-    <!-- 轮播（Carousel）导航 -->
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">上一张</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">下一张</span>
-    </a>
+
+
 </div>
 
 
@@ -124,6 +105,6 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/jquery.form.min.js"></script>
 <script src="/static/js/jquery-ui.min.js"></script>
-<script src="/static/js/main.js"></script>
+<script src="/static/js/portrait.js"></script>
 </body>
 </html>

@@ -69,6 +69,15 @@ func WriteTimeout() (time.Duration) {
 	return 20 * time.Second
 }
 
+func ExpireTime() (time.Duration) {
+	if t, ok := conf["ExpireTime"]; ok {
+		if writeTimeout, err := time.ParseDuration(t); err == nil {
+			return writeTimeout
+		}
+	}
+	return 24 * time.Hour
+}
+
 func WebConf() (map[string]string) {
 	return conf
 }

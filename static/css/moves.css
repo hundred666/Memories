@@ -95,13 +95,14 @@ pre {
 
 }
 
-#move-comment ul li label {
-    width: 100px;
+#move-comment ul li span {
     height: 100%;
     padding: 3px;
+    color: #777777;
+    font-weight: normal;
 }
 
-#move-comment ul li label {
-    color: #ff4343;
-    font-weight: normal;
+
+#move-comment ul li div #time {
+    float: right;
 }

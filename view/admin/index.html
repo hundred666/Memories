@@ -25,8 +25,8 @@
 {{$login := .Login }}
 {{if eq $login 1}}
 <!-- 模态框（Modal） -->
-<div class="modal" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal in" id="LoginModal" tabindex="-1" role="dialog"
+     aria-labelledby="LoginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -34,18 +34,18 @@
                         aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title" id="myModalLabel">
+                <h4 class="modal-title" id="LoginModalLabel">
                     登录
                 </h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" id="loginForm">
                     <div class="form-group">
                         <label for="username"
                                class="col-sm-2 control-label">名字</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="username"
-                                   name="name"
+                                   name="username"
                                    placeholder="请输入名字">
                         </div>
                     </div>
@@ -72,7 +72,8 @@
     </div><!-- /.modal -->
 </div>
 <script>
-    $("#myModal").modal("show");
+    $("#LoginModal").modal("show");
+
 </script>
 {{else}}
 <header>
@@ -105,23 +106,45 @@
         已经共有{{.Users}}个用户
     </div>
 
-    <div class="row" id="contents">
-        <div class="col-md-4 col-sm-6 col-xs-12 comments-ul">
-            <h3>最近的评论</h3>
-            <ul id="comments">
+    <div id="contents">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12 comments-ul">
+                <h3>最近的评论</h3>
+                <ul id="comments">
 
-            </ul>
+                </ul>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12 moves-ul">
+                <h3>最近的记忆</h3>
+                <ul id="moves"></ul>
+            </div>
         </div>
-        <div class="col-md-4 col-sm-6 col-xs-12 moves-ul">
-            <h3>最近的记忆</h3>
-            <ul id="moves"></ul>
-        </div>
-        <div class="col-md-4 col-sm-6 col-xs-12 users-ul">
-            <h3>所有的用户</h3>
-            <ul id="users">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12 users-ul">
+                <h3>所有的用户</h3>
+                <ul id="users">
 
-            </ul>
+                </ul>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12 announces-ul">
+                <div class="row">
+                    <div class="col-md-8 col-xs-8 col-sm-8">
+                        <h3>最近的通知</h3>
+                    </div>
+                    <div class="col-md-4 col-xs-4 col-sm-4 pull-right">
+                        <h3 data-toggle="modal"
+                           data-target="#NewAnnounceModal">
+                            新建通知
+                        </h3>
+                    </div>
+                </div>
+                <ul id="announces">
+
+                </ul>
+            </div>
         </div>
+
     </div>
 </div>
 {{end}}
@@ -141,7 +164,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" role="form" id="commentForm">
                         <input type="hidden" name="commentId" id="commentId">
                         <div class="form-group">
                             <label for="commentUser"
@@ -189,7 +212,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" role="form" id="moveForm">
                         <input type="hidden" name="moveId" id="moveId">
                         <div class="form-group">
                             <label for="moveUser"
@@ -238,7 +261,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" role="form" id="userForm">
                         <input type="hidden" name="userId" id="userId">
                         <div class="form-group">
                             <label for="username"
@@ -263,7 +286,7 @@
                             <label for="permission"
                                    class="col-sm-2 control-label">权限</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="permission" name="permission">
+                                <select class="form-control" id="userPermission" name="userPermission">
                                     <option value="0">仅可评论</option>
                                     <option value="1">可以上传文件</option>
                                     <option value="5">管理员</option>
@@ -284,6 +307,105 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+
+    <div class="modal fade" id="AnnounceModal" tabindex="-1" role="dialog"
+         aria-labelledby="AnnounceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="AnnounceModalLabel">
+                        修改通知
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" id="announceForm">
+
+                        <input type="hidden" name="announceId" id="announceId">
+                        <div class="form-group">
+                            <label for="announceUser"
+                                   class="col-sm-2 control-label">提交者</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="announceUser"
+                                       name="announceUser"
+                                       placeholder="请输入名称">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="announceDisplay" id="announceDisplay">显示通知
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="announceContent"
+                                   class="col-sm-2 control-label">通知内容</label>
+                            <div class="col-sm-10">
+                                <textarea id="announceContent" class="form-control"
+                                          rows="3" name="announceContent"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"
+                                        id="announce-submit">提交
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="NewAnnounceModal" tabindex="-1" role="dialog"
+         aria-labelledby="NewAnnounceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="NewAnnounceModalLabel">
+                        新建通知
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" id="newAnnounceForm">
+                        <div class="form-group">
+                            <label for="newAnnounceContent"
+                                   class="col-sm-2 control-label">通知内容</label>
+                            <div class="col-sm-10">
+                                <textarea id="newAnnounceContent" class="form-control"
+                                          rows="3" name="newAnnounceContent"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"
+                                        id="new-announce-submit">提交
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
 
 </div>
 

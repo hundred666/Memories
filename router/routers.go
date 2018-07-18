@@ -10,6 +10,7 @@ import (
 	"handler/admin"
 	"util"
 	"log"
+	"handler/announce"
 )
 
 var Mux *http.ServeMux
@@ -25,6 +26,7 @@ func InitRT() {
 	moveHandler := move.MoveHandler{}
 	userHandler := user.UserHandler{}
 	adminHandler := admin.AdminHandler{}
+	announceHandler := announce.AnnounceHandler{}
 
 	mux.HandleFunc("/", indexHandler.Index)
 	mux.HandleFunc("/comment/addComment", commentHandler.AddComment)
@@ -44,6 +46,10 @@ func InitRT() {
 	mux.HandleFunc("/move/viewMoves", moveHandler.ViewMoves)
 	mux.HandleFunc("/move/viewMoveDetail", moveHandler.ViewMoveDetail)
 
+	mux.HandleFunc("/announce/getLatestAnnounce", announceHandler.GetLatestAnnounce)
+	mux.HandleFunc("/announce/getAnnounce", announceHandler.GetAnnounce)
+	mux.HandleFunc("/announce/getAnnounces", announceHandler.GetAnnounces)
+
 	//user
 	mux.HandleFunc("/user/login", userHandler.Login)
 	mux.HandleFunc("/user/register", userHandler.Register)
@@ -61,6 +67,9 @@ func InitRT() {
 	mux.HandleFunc("/admin/delMoveComment", adminHandler.DelMoveComment)
 	mux.HandleFunc("/admin/updateUser", adminHandler.UpdateUser)
 	mux.HandleFunc("/admin/delUser", adminHandler.DelUser)
+	mux.HandleFunc("/admin/updateAnnounce", adminHandler.UpdateAnnounce)
+	mux.HandleFunc("/admin/delAnnounce", adminHandler.DelAnnounce)
+	mux.HandleFunc("/admin/addAnnounce", adminHandler.AddAnnounce)
 
 	staticPath, err := util.GetStaticPath()
 	if err != nil {

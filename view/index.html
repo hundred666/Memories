@@ -16,8 +16,12 @@
     <script src="bootstrap/js/respond.js"></script>
     <![endif]-->
 </head>
-<body onload="updateComment()">
+<body onload="index()">
 
+<div id="announce" class="alert alert-success">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <p id="announceText"></p>
+</div>
 
 <div id="main-page">
     <div class="container">
@@ -56,7 +60,7 @@
                         <div class="row" id="comment-title">
                             <div class="col-md-4 col-xs-4 col-sm-4">
                                 <button class="btn btn-primary btn-info" data-toggle="modal"
-                                        data-target="#myModal">
+                                        data-target="#upComment">
                                     点我评论
                                 </button>
                             </div>
@@ -76,8 +80,8 @@
 
 
                         <!-- 模态框（Modal） -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-                             aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="upComment" tabindex="-1" role="dialog"
+                             aria-labelledby="upCommentLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -85,18 +89,18 @@
                                                 aria-hidden="true">
                                             &times;
                                         </button>
-                                        <h4 class="modal-title" id="myModalLabel">
+                                        <h4 class="modal-title" id="upCommentLabel">
                                             你想说什么
                                         </h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form class="form-horizontal" role="form">
+                                        <form class="form-horizontal" role="form" id="commentForm">
                                             <div class="form-group">
                                                 <label for="username"
                                                        class="col-sm-2 control-label">名字</label>
                                                 <div class="col-sm-10">
                                                     <input type="text" class="form-control" id="username"
-                                                           name="name"
+                                                           name="username"
                                                            placeholder="请输入名字">
                                                 </div>
                                             </div>
@@ -113,8 +117,8 @@
                                                 <label for="comment-content"
                                                        class="col-sm-2 control-label">评论内容</label>
                                                 <div class="col-sm-10">
-                                                                <textarea id="comment-content" class="form-control"
-                                                                          rows="3" name="content"></textarea>
+                                                                <textarea id="commentContent" class="form-control"
+                                                                          rows="3" name="commentContent"></textarea>
                                                 </div>
                                             </div>
 

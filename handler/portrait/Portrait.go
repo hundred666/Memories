@@ -19,11 +19,10 @@ type PortraitHandler struct {
 func (p *PortraitHandler) View(w http.ResponseWriter, req *http.Request) {
 
 	t, err := template.ParseFiles(handler.GetView("portrait.html"))
-	portraits := dao.GetPortraits(handler.DEFAULT_START, handler.DEFAULT_END)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, err.Error()))
 	}
-	t.Execute(w, portraits)
+	t.Execute(w, nil)
 
 }
 
@@ -34,7 +33,7 @@ func (p *PortraitHandler) GetPortraits(w http.ResponseWriter, req *http.Request)
 	start := req.Form.Get("start")
 	end := req.Form.Get("end")
 	if start == "" || end == "" {
-		portraits = dao.GetPortraits(handler.DEFAULT_START, handler.DEFAULT_END)
+		portraits = dao.GetPortraits(handler.DEFAULT_START, handler.DEFAULT_END,"ORDER BY Id DESC")
 	} else {
 		startSeq, _ := strconv.Atoi(start)
 		endSeq, _ := strconv.Atoi(end)
@@ -46,7 +45,7 @@ func (p *PortraitHandler) GetPortraits(w http.ResponseWriter, req *http.Request)
 
 func (p *PortraitHandler) Add(w http.ResponseWriter, req *http.Request) {
 	req.ParseMultipartForm(32 << 20)
-	userName := req.Form.Get("name")
+	userName := req.Form.Get("username")
 	password := req.Form.Get("password")
 	user := model.User{Name: userName, Password: password, LoginTime: time.Now()}
 
@@ -80,7 +79,7 @@ func (p *PortraitHandler) Add(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	portrait := model.Portrait{Name: photoName, Path: photoPath, UpTime: upTime, UpUser: upUser}
+	portrait := model.Portrait{Name: photoName, Path: photoPath, Time: upTime, User: upUser}
 	dao.AddPortrait(portrait)
 	dao.UpdateUserLogin(user)
 
