@@ -30,6 +30,7 @@ func GetComments(start int, end int, args ...string) ([]model.Comment) {
 	}
 	return comments
 }
+
 func GetComment(id int, args ...string) (model.Comment) {
 	var comment model.Comment
 	query := "SELECT * FROM Comment WHERE Id=? "

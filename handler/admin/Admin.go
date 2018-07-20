@@ -5,7 +5,7 @@ import (
 	"handler"
 	"log"
 	"html/template"
-	"dao"
+	"service"
 	"model"
 	"strconv"
 	"time"
@@ -16,27 +16,30 @@ type AdminHandler struct {
 
 const ADMIN = "ADMIN"
 
-func (a *AdminHandler) LoginCheck(req *http.Request) bool {
-	if _, err := req.Cookie("userId"); err == nil {
-		return true
+func (a *AdminHandler) LoginCheck(req *http.Request) (bool, model.User) {
+	var user model.User
+	id, err := req.Cookie("userId")
+	if err != nil {
+		return false, user
 	}
-	return false
+	userId, _ := strconv.Atoi(id.Value)
+	user = service.GetUserById(userId)
+	return true, user
+
 }
 
 func (a *AdminHandler) Index(w http.ResponseWriter, req *http.Request) {
 	data := make(map[string]interface{})
-	if !a.LoginCheck(req) {
+	data["Login"] = 0
+	if login, user := a.LoginCheck(req); !login {
 		data["Login"] = 1
 	} else {
-		data["Login"] = 0
-		userCookie, _ := req.Cookie("userId")
-		userId, _ := strconv.Atoi(userCookie.Value)
-		user := dao.GetUserById(userId)
+
 		data["UserName"] = user.Name
-		userCount := dao.GetUserCount()
-		moveCount := dao.GetMoveCount()
-		commentCount := dao.GetCommentCount()
-		portraitCount := dao.GetPortraitCount()
+		userCount := service.GetUserCount()
+		moveCount := service.GetMoveCount()
+		commentCount := service.GetCommentCount()
+		portraitCount := service.GetPortraitCount()
 
 		data["Users"] = userCount
 		data["Moves"] = moveCount
@@ -53,7 +56,8 @@ func (a *AdminHandler) Index(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) UpdateComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -64,7 +68,7 @@ func (a *AdminHandler) UpdateComment(w http.ResponseWriter, req *http.Request) {
 		Id:      commentId,
 		User:    commentUser,
 		Content: content}
-	_, err = dao.UpdateComment(comment)
+	err = service.UpdateComment(user, comment)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "comment update failed"))
 		return
@@ -74,7 +78,8 @@ func (a *AdminHandler) UpdateComment(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) DelComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -85,7 +90,7 @@ func (a *AdminHandler) DelComment(w http.ResponseWriter, req *http.Request) {
 	}
 	comment := model.Comment{
 		Id: commentId}
-	_, err = dao.DelComment(comment)
+	err = service.DelComment(user, comment)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "comment update failed"))
 		return
@@ -95,7 +100,8 @@ func (a *AdminHandler) DelComment(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) UpdateMove(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, loginUser := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -107,7 +113,7 @@ func (a *AdminHandler) UpdateMove(w http.ResponseWriter, req *http.Request) {
 	user := req.Form.Get("moveUser")
 	content := req.Form.Get("moveContent")
 	move := model.Move{Id: moveId, Content: content, User: user}
-	_, err = dao.UpdateMove(move)
+	err = service.UpdateMove(loginUser, move)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "move update failed"))
 		return
@@ -117,7 +123,8 @@ func (a *AdminHandler) UpdateMove(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) DelMove(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -128,7 +135,7 @@ func (a *AdminHandler) DelMove(w http.ResponseWriter, req *http.Request) {
 	}
 
 	move := model.Move{Id: moveId}
-	_, err = dao.DelMove(move)
+	err = service.DelMove(user, move)
 	if err != nil {
 		log.Println()
 		w.Write(model.MarshalResponse(1, "move delete failed"))
@@ -139,7 +146,8 @@ func (a *AdminHandler) DelMove(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) UpdateMoveComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -159,8 +167,7 @@ func (a *AdminHandler) UpdateMoveComment(w http.ResponseWriter, req *http.Reques
 		User:    commentUser,
 		Content: content}
 
-
-	_, err = dao.UpdateMoveComment(move, comment)
+	err = service.UpdateMoveComment(user, move, comment)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "comment update failed"))
 		return
@@ -170,7 +177,8 @@ func (a *AdminHandler) UpdateMoveComment(w http.ResponseWriter, req *http.Reques
 
 func (a *AdminHandler) DelMoveComment(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -186,7 +194,7 @@ func (a *AdminHandler) DelMoveComment(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 	comment := model.Comment{Id: commentId}
-	_, err = dao.DelMoveComment(move, comment)
+	err = service.DelMoveComment(user, move, comment)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "comment delete failed"))
 		return
@@ -197,7 +205,8 @@ func (a *AdminHandler) DelMoveComment(w http.ResponseWriter, req *http.Request) 
 
 func (a *AdminHandler) UpdateUser(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, _ := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -214,7 +223,7 @@ func (a *AdminHandler) UpdateUser(w http.ResponseWriter, req *http.Request) {
 	}
 
 	user := model.User{Id: userId, Name: userName, Password: password, Permission: permission}
-	err = dao.UpdateUser(user)
+	err = service.UpdateUser(user)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "user update failed"))
 		return
@@ -224,7 +233,8 @@ func (a *AdminHandler) UpdateUser(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) DelUser(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, _ := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -235,7 +245,7 @@ func (a *AdminHandler) DelUser(w http.ResponseWriter, req *http.Request) {
 	}
 
 	user := model.User{Id: userId}
-	_, err = dao.DelUser(user)
+	err = service.DelUser(user)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "user delete failed"))
 		return
@@ -245,7 +255,8 @@ func (a *AdminHandler) DelUser(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) UpdateAnnounce(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, _ := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -264,7 +275,7 @@ func (a *AdminHandler) UpdateAnnounce(w http.ResponseWriter, req *http.Request) 
 		Display: display,
 		Content: content}
 
-	_, err = dao.UpdateAnnounce(announce)
+	err = service.UpdateAnnounce(announce)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "announce update failed"))
 		return
@@ -274,7 +285,8 @@ func (a *AdminHandler) UpdateAnnounce(w http.ResponseWriter, req *http.Request) 
 
 func (a *AdminHandler) DelAnnounce(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, _ := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
@@ -285,7 +297,7 @@ func (a *AdminHandler) DelAnnounce(w http.ResponseWriter, req *http.Request) {
 	}
 	announce := model.Announce{
 		Id: announceId}
-	_, err = dao.DelAnnounce(announce)
+	_, err = service.DelAnnounce(announce)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, "announce del failed"))
 		return
@@ -295,13 +307,11 @@ func (a *AdminHandler) DelAnnounce(w http.ResponseWriter, req *http.Request) {
 
 func (a *AdminHandler) AddAnnounce(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
-	if !a.LoginCheck(req) {
+	login, user := a.LoginCheck(req)
+	if !login {
 		w.Write(model.MarshalResponse(1, "not login"))
 		return
 	}
-	userCookie, _ := req.Cookie("userId")
-	userId, _ := strconv.Atoi(userCookie.Value)
-	user := dao.GetUserById(userId)
 
 	content := req.Form.Get("newAnnounceContent")
 	announceTime := time.Now()
@@ -313,7 +323,7 @@ func (a *AdminHandler) AddAnnounce(w http.ResponseWriter, req *http.Request) {
 		User:    user.Name,
 		Time:    announceTime,
 	}
-	err := dao.AddAnnounce(announce)
+	err := service.AddAnnounce(user, announce)
 	if err != nil {
 		w.Write(model.MarshalResponse(1, err.Error()))
 		return

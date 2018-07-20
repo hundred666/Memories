@@ -2,7 +2,7 @@ package announce
 
 import (
 	"net/http"
-	"dao"
+	"service"
 	"model"
 	"time"
 	"handler"
@@ -15,7 +15,7 @@ type AnnounceHandler struct {
 const ANNOUNCE = "ANNOUNCE"
 
 func (a *AnnounceHandler) GetLatestAnnounce(w http.ResponseWriter, req *http.Request) {
-	announce := dao.GetLatestAnnounce()
+	announce := service.GetLatestAnnounce()
 	period := time.Now().Sub(announce.Time)
 	if announce.Id == 0 || announce.Display == false || period > handler.ExpireTime {
 		w.Write(model.MarshalResponse(2, "not show"))
@@ -32,7 +32,7 @@ func (a *AnnounceHandler) GetAnnounce(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 	id, _ := strconv.Atoi(announceId)
-	comment := dao.GetAnnounce(id)
+	comment := service.GetAnnounce(id)
 	w.Write(model.MarshalResponse(0, comment))
 }
 
@@ -42,11 +42,11 @@ func (a *AnnounceHandler) GetAnnounces(w http.ResponseWriter, req *http.Request)
 	start := req.Form.Get("start")
 	end := req.Form.Get("end")
 	if start == "" || end == "" {
-		announces = dao.GetAnnounces(handler.DEFAULT_START, handler.DEFAULT_END)
+		announces = service.GetAnnounces(handler.DEFAULT_START, handler.DEFAULT_END)
 	} else {
 		startSeq, _ := strconv.Atoi(start)
 		endSeq, _ := strconv.Atoi(end)
-		announces = dao.GetAnnounces(startSeq, endSeq)
+		announces = service.GetAnnounces(startSeq, endSeq)
 	}
 	w.Write(model.MarshalResponse(0, announces))
 }

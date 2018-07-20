@@ -9,7 +9,7 @@ import (
 )
 
 func TestInserComment(t *testing.T) {
-	c := model.Comment{UName: "abc", Content: "dasffdwef", CommentTime: time.Now(), CommentType: 1, IP: "ABC", UA: "GOO"}
+	c := model.Comment{User: "abc", Content: "dasffdwef", CommentTime: time.Now(), CommentType: 1, IP: "ABC", UA: "GOO"}
 	_, err := AddComment(c)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -46,3 +46,4 @@ func TestDelPortrait(t *testing.T) {
 func TestGetUserCount(t *testing.T) {
 	fmt.Println(GetUserCount())
 }
+

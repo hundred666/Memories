@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 	"model"
-	"dao"
+	"service"
 	"strconv"
 )
 
@@ -33,11 +33,11 @@ func (p *PortraitHandler) GetPortraits(w http.ResponseWriter, req *http.Request)
 	start := req.Form.Get("start")
 	end := req.Form.Get("end")
 	if start == "" || end == "" {
-		portraits = dao.GetPortraits(handler.DEFAULT_START, handler.DEFAULT_END,"ORDER BY Id DESC")
+		portraits = service.GetPortraits(handler.DEFAULT_START, handler.DEFAULT_END,"ORDER BY Id DESC")
 	} else {
 		startSeq, _ := strconv.Atoi(start)
 		endSeq, _ := strconv.Atoi(end)
-		portraits = dao.GetPortraits(startSeq, endSeq)
+		portraits = service.GetPortraits(startSeq, endSeq,"ORDER BY Id DESC")
 	}
 	w.Write(model.MarshalResponse(0, portraits))
 
@@ -49,7 +49,7 @@ func (p *PortraitHandler) Add(w http.ResponseWriter, req *http.Request) {
 	password := req.Form.Get("password")
 	user := model.User{Name: userName, Password: password, LoginTime: time.Now()}
 
-	if !dao.UploadPermission(user) {
+	if !service.UploadPermission(user) {
 		w.Write(model.MarshalResponse(1, "用户身份不对"))
 		return
 	}
@@ -80,8 +80,8 @@ func (p *PortraitHandler) Add(w http.ResponseWriter, req *http.Request) {
 	}
 
 	portrait := model.Portrait{Name: photoName, Path: photoPath, Time: upTime, User: upUser}
-	dao.AddPortrait(portrait)
-	dao.UpdateUserLogin(user)
+	service.AddPortrait(user, portrait)
+	service.UpdateUserLogin(user)
 
 	w.Write(model.MarshalResponse(0, "success"))
 }
